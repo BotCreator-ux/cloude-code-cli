@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # =========================================
-# Claude Code Auto Installer
-# UI Version
+# Claude Code CLI Auto Installer
 # =========================================
 
 clear
 
+# warna
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[1;34m'
@@ -16,24 +16,7 @@ WHITE='\033[1;37m'
 NC='\033[0m'
 
 line() {
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-}
-
-logo() {
-    clear
-    echo -e "${CYAN}"
-    echo " ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗"
-    echo "██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝"
-    echo "██║     ██║     ███████║██║   ██║██║  ██║█████╗  "
-    echo "██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  "
-    echo "╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗"
-    echo " ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝"
-    echo -e "${NC}"
-
-    echo -e "${WHITE}         Claude Code CLI Auto Installer V0.1Beta${NC}"
-    echo -e "${YELLOW}                Node.js 21 - 26${NC}"
-    echo ""
-    line
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
 
 success() {
@@ -48,11 +31,30 @@ info() {
     echo -e "${CYAN}[•] $1${NC}"
 }
 
+logo() {
+    clear
+
+    echo -e "${CYAN}"
+    echo " ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗"
+    echo "██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝"
+    echo "██║     ██║     ███████║██║   ██║██║  ██║█████╗  "
+    echo "██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  "
+    echo "╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗"
+    echo " ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝"
+    echo -e "${NC}"
+
+    echo -e "${WHITE}         Claude Code CLI Auto Installer${NC}"
+    echo -e "${YELLOW}                Node.js 21 - 26${NC}"
+    echo ""
+
+    line
+}
+
 # =========================================
 
 logo
 
-# cek root
+# sudo checker
 if [[ $EUID -ne 0 ]]; then
     SUDO="sudo"
 else
@@ -60,7 +62,7 @@ else
 fi
 
 # =========================================
-# PILIH NODEJS
+# PILIH NODE
 # =========================================
 
 echo -e "${WHITE}Pilih versi Node.js:${NC}"
@@ -74,17 +76,36 @@ echo -e "${GREEN}[6]${NC} Node.js 26"
 echo ""
 
 while true; do
+
     printf "${YELLOW}Masukkan pilihan [1-6]: ${NC}"
 
-    read pilihan
+    read pilihan < /dev/tty
 
     case "$pilihan" in
-        1) NODE_VER=21; break ;;
-        2) NODE_VER=22; break ;;
-        3) NODE_VER=23; break ;;
-        4) NODE_VER=24; break ;;
-        5) NODE_VER=25; break ;;
-        6) NODE_VER=26; break ;;
+        1)
+            NODE_VER=21
+            break
+            ;;
+        2)
+            NODE_VER=22
+            break
+            ;;
+        3)
+            NODE_VER=23
+            break
+            ;;
+        4)
+            NODE_VER=24
+            break
+            ;;
+        5)
+            NODE_VER=25
+            break
+            ;;
+        6)
+            NODE_VER=26
+            break
+            ;;
         *)
             error "Pilihan tidak valid!"
             ;;
@@ -102,15 +123,16 @@ sleep 1
 
 if [ -f /etc/debian_version ]; then
 
-    info "Detected Debian/Ubuntu"
+    info "Detected Debian / Ubuntu"
 
     curl -fsSL https://deb.nodesource.com/setup_${NODE_VER}.x | $SUDO -E bash -
+
     $SUDO apt-get update -y
     $SUDO apt-get install -y nodejs
 
 elif [ -f /etc/redhat-release ]; then
 
-    info "Detected CentOS/RHEL/Fedora"
+    info "Detected CentOS / Fedora / RHEL"
 
     curl -fsSL https://rpm.nodesource.com/setup_${NODE_VER}.x | $SUDO bash -
 
@@ -137,22 +159,27 @@ else
     exit 1
 fi
 
+# =========================================
+# CHECK NODE
+# =========================================
+
 line
 
 NODE_VERSION=$(node --version 2>/dev/null)
 
-if [[ -n "$NODE_VERSION" ]]; then
-    success "Node.js installed: $NODE_VERSION"
-else
+if [[ -z "$NODE_VERSION" ]]; then
     error "Gagal install Node.js"
     exit 1
 fi
+
+success "Node.js berhasil diinstall: $NODE_VERSION"
 
 # =========================================
 # INSTALL CLAUDE
 # =========================================
 
 line
+
 info "Installing Claude Code CLI ..."
 echo ""
 
@@ -160,13 +187,13 @@ npm install -g @anthropic-ai/claude-code
 
 if [ $? -ne 0 ]; then
 
-    error "Install utama gagal, mencoba mirror..."
+    error "Install gagal, mencoba mirror..."
 
     npm install -g @anthropic-ai/claude-code \
     --registry https://registry.npmmirror.com
 
     if [ $? -ne 0 ]; then
-        error "Install Claude Code gagal!"
+        error "Gagal install Claude Code!"
         exit 1
     fi
 fi
@@ -184,7 +211,8 @@ echo -e "${CYAN}https://freemodel.dev/invite/FRE-c0ca4c8e${NC}"
 echo ""
 
 printf "${YELLOW}Masukkan API KEY: ${NC}"
-read API_KEY
+
+read API_KEY < /dev/tty
 
 mkdir -p ~/.claude
 
@@ -216,11 +244,11 @@ CLAUDE_VERSION=$(claude --version 2>/dev/null)
 success "Setup selesai!"
 echo ""
 
-echo -e "${GREEN}Node.js:${NC} $NODE_VERSION"
-echo -e "${GREEN}Claude:${NC}  $CLAUDE_VERSION"
+echo -e "${GREEN}Node.js:${NC}  $NODE_VERSION"
+echo -e "${GREEN}Claude:${NC}   $CLAUDE_VERSION"
 
 echo ""
-echo -e "${CYAN}Jalankan:${NC}"
+echo -e "${CYAN}Jalankan command:${NC}"
 echo -e "${WHITE}claude${NC}"
 echo ""
 
