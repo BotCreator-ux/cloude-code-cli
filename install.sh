@@ -30,7 +30,7 @@ logo() {
     echo " ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝"
     echo -e "${NC}"
 
-    echo -e "${WHITE}         Claude Code CLI Auto Installer${NC}"
+    echo -e "${WHITE}         Claude Code CLI Auto Installer V0.1Beta${NC}"
     echo -e "${YELLOW}                Node.js 21 - 26${NC}"
     echo ""
     line
