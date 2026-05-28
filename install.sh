@@ -8,14 +8,14 @@ echo " Node.js 21 - 26"
 echo "======================================"
 echo ""
 
-# Cek root
+# cek sudo
 if [[ $EUID -ne 0 ]]; then
     SUDO="sudo"
 else
     SUDO=""
 fi
 
-# Pilih versi Node.js
+# pilih nodejs
 echo "Pilih versi Node.js:"
 echo "1) Node.js 21"
 echo "2) Node.js 22"
@@ -25,9 +25,9 @@ echo "5) Node.js 25"
 echo "6) Node.js 26"
 echo ""
 
-read -p "Masukkan pilihan [1-6]: " pilihan
+read -r -p "Masukkan pilihan [1-6]: " pilihan < /dev/tty
 
-case $pilihan in
+case "$pilihan" in
     1) NODE_VER=21 ;;
     2) NODE_VER=22 ;;
     3) NODE_VER=23 ;;
@@ -35,6 +35,7 @@ case $pilihan in
     5) NODE_VER=25 ;;
     6) NODE_VER=26 ;;
     *)
+        echo ""
         echo "Pilihan tidak valid!"
         exit 1
         ;;
@@ -44,16 +45,14 @@ echo ""
 echo "Installing Node.js v$NODE_VER ..."
 sleep 1
 
-# Detect distro
+# detect distro
 if [ -f /etc/debian_version ]; then
-    DISTRO="debian"
 
     curl -fsSL https://deb.nodesource.com/setup_${NODE_VER}.x | $SUDO -E bash -
     $SUDO apt-get update
     $SUDO apt-get install -y nodejs
 
 elif [ -f /etc/redhat-release ]; then
-    DISTRO="rhel"
 
     curl -fsSL https://rpm.nodesource.com/setup_${NODE_VER}.x | $SUDO bash -
 
@@ -64,12 +63,10 @@ elif [ -f /etc/redhat-release ]; then
     fi
 
 elif [ -f /etc/arch-release ]; then
-    DISTRO="arch"
 
     $SUDO pacman -Sy --noconfirm nodejs npm
 
-elif [ -f /etc/SuSE-release ] || [ -f /etc/os-release ] && grep -qi suse /etc/os-release; then
-    DISTRO="suse"
+elif grep -qi suse /etc/os-release 2>/dev/null; then
 
     $SUDO zypper install -y nodejs npm
 
@@ -91,7 +88,7 @@ npm install -g @anthropic-ai/claude-code
 
 if [ $? -ne 0 ]; then
     echo ""
-    echo "Install gagal, mencoba pakai registry mirror..."
+    echo "Install gagal, mencoba mirror..."
 
     npm install -g @anthropic-ai/claude-code \
         --registry https://registry.npmmirror.com
@@ -102,7 +99,7 @@ echo "======================================"
 echo " Setup API Key"
 echo "======================================"
 
-read -p "Masukkan API KEY: " API_KEY
+read -r -p "Masukkan API KEY: " API_KEY < /dev/tty
 
 mkdir -p ~/.claude
 
@@ -127,18 +124,14 @@ echo " Setup selesai!"
 echo "======================================"
 
 echo ""
-echo "Versi Node:"
+echo "Node Version:"
 node --version
 
 echo ""
-echo "Claude Code version:"
+echo "Claude Version:"
 claude --version
 
 echo ""
-echo "File config:"
-echo "~/.claude/settings.json"
-
-echo ""
-echo "Jalankan dengan command:"
+echo "Jalankan command:"
 echo "claude"
 echo ""
