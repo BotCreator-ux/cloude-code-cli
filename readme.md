@@ -18,13 +18,13 @@ Installer otomatis untuk setup Claude Code CLI di Linux dengan cepat dan simple.
 
 # ⚡ Quick Install
 
-```bash
+```
 wget -O- https://raw.githubusercontent.com/BotCreator-ux/cloude-code-cli/refs/heads/main/install.sh | bash
-
+```
 atau:
-
+```
 curl -fsSL https://raw.githubusercontent.com/BotCreator-ux/cloude-code-cli/refs/heads/main/install.sh | bash
-
+```
 ---
 
 🔑 Cara Ambil API Key
@@ -46,32 +46,32 @@ curl -fsSL https://raw.githubusercontent.com/BotCreator-ux/cloude-code-cli/refs/
 ---
 
 📦 Menjalankan Claude
-
+```
 claude
-
+```
 Cek versi:
-
+```
 claude --version
-
+```
 ---
 
 📁 Lokasi Config
-
+```
 ~/.claude/settings.json
-
+```
 ---
 
 🔄 Update Claude Code
-
+```
 npm install -g @anthropic-ai/claude-code
-
+```
 ---
 
 ❌ Uninstall
-
+```
 npm uninstall -g @anthropic-ai/claude-code
 rm -rf ~/.claude
-
+```
 ---
 
 🐧 Supported OS
@@ -85,7 +85,3 @@ rm -rf ~/.claude
 - openSUSE
 
 ---
-
-❤️ Credits
-
-Made with ❤️ by BotCreator-ux
